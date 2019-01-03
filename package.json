@@ -1,0 +1,19 @@
+{
+  "name": "pickle-cafe",
+  "version": "1.0.0",
+  "description": "A framework that integrates TestCafé and Cucumber",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@vcs.aws.insim.biz:hyp-klant-worden/pickle-cafe.git"
+  },
+  "keywords": [
+    "testcafe",
+    "cucumber"
+  ],
+  "author": "Bob Luursema",
+  "license": "MIT"
+}
