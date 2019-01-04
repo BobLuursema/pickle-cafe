@@ -1,13 +1,14 @@
-const {setWorldConstructor} = require('cucumber');
 const testControllerHolder = require('./testControllerHolder');
 const base64Img = require('base64-img');
 
-function CustomWorld({attach, parameters}) {
+module.exports = function({attach, parameters}) {
 
     this.waitForTestController = testControllerHolder.get()
         .then(function(t) {
-            for(let c of setupClasses){
-                this[c.tcName()] = new c(t)
+            if(global.setupClasses){
+                for(let c of setupClasses){
+                    this[c.tcName()] = new c(t)
+                }
             }
             this.t = t
             return t
@@ -40,5 +41,3 @@ function CustomWorld({attach, parameters}) {
         return attach(imageConvertForCuc, 'image/png');
     };
 }
-
-setWorldConstructor(CustomWorld);

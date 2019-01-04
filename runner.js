@@ -1,7 +1,7 @@
 const createTestCafe = require('testcafe');
 const glob = require('glob');
 const { Parser, AstBuilder } = require('gherkin');
-const { readFileSync, writeFileSync, createWriteStream } = require('fs');
+const { readFileSync, writeFileSync, createWriteStream, unlinkSync } = require('fs');
 
 class Runner {
     constructor(){
@@ -15,7 +15,7 @@ class Runner {
         const features = glob.sync('./features/**/*.feature')
             .map(path => parser.parse(readFileSync(path, 'utf8').toString()))
         // Create the test file
-        let importStatement = 'import testControllerHolder from "./tc-cu/testControllerHolder.js"\n\n'
+        let importStatement = 'import testControllerHolder from "./node_modules/pickle-cafe/testControllerHolder"\n\n'
         let testCode = ''
         for(let feature of features){
             testCode += `fixture("${feature.feature.name}")\n`
@@ -39,7 +39,7 @@ class Runner {
     
     run(){
         this.stream = createWriteStream('reports/report.txt')
-        createTestCafe('localhost', 1338, 1339)
+        createTestCafe()
         .then(testcafe => {
             this.testcafe = testcafe;
             const runner = testcafe.createRunner();
@@ -51,8 +51,8 @@ class Runner {
                 .run()
         })
         .then(failedCount => {
-            console.log('check')
             this.stream.end()
+            unlinkSync('./test.js')
         });
     }
 }

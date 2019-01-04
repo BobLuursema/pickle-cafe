@@ -1,6 +1,4 @@
-const {defineStep} = require('cucumber')
-
-const testcafeErrorWrapper = function(fn){
+module.exports = function(fn){
     const arity = fn.length
     switch(arity){
         case 0:
@@ -14,12 +12,4 @@ const testcafeErrorWrapper = function(fn){
         default:
             throw Error('Expand wrapper!')
     }
-}
-
-const wrapper = function(pattern, fn){
-    defineStep(pattern, testcafeErrorWrapper(fn))
-}
-
-module.exports = {
-    defineStep: wrapper
 }
