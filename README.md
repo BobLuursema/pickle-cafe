@@ -114,3 +114,7 @@ Now we are ready to run the test via Cucumber: `.\node_modules\.bin\cucumber-js`
 ```
 
 Now you are all set to use the BDD goodness with the TestCafé experience.
+
+## Backlog
+
+- Expose the TestCafé programming interface for projects. This can probably be done by using the `parameters` variable in `world.js`.
