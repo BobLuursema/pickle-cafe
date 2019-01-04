@@ -13,7 +13,13 @@ module.exports = function(fn){
             return async function(a, b){try {return await fn.apply(this, arguments)} catch(ex){t.testRun.addError(ex);throw ex}}
         case 3:
             return async function(a, b, c){try {return await fn.apply(this, arguments)} catch(ex){t.testRun.addError(ex);throw ex}}
+        case 4:
+            return async function(a, b, c, d){try {return await fn.apply(this, arguments)} catch(ex){t.testRun.addError(ex);throw ex}}
+        case 5:
+            return async function(a, b, c, d, e){try {return await fn.apply(this, arguments)} catch(ex){t.testRun.addError(ex);throw ex}}
+        case 6:
+            return async function(a, b, c, d, e, f){try {return await fn.apply(this, arguments)} catch(ex){t.testRun.addError(ex);throw ex}}
         default:
-            throw Error('Expand wrapper!')
+            throw Error('PickleCafé only supports a maximum arity of six for the step definitions.')
     }
 }
