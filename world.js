@@ -1,7 +1,13 @@
 const testControllerHolder = require('./testControllerHolder');
 const base64Img = require('base64-img');
 
+/* This function is the World function for Cucumber, variables declared in the `this` here are exposed
+ * to the hooks and step definitions in Cucumber.
+*/
 module.exports = function({attach, parameters}) {
+
+    this.attach = attach
+    this.parameters = parameters
 
     this.waitForTestController = testControllerHolder.get()
         .then(function(t) {
@@ -13,9 +19,6 @@ module.exports = function({attach, parameters}) {
             this.t = t
             return t
         });
-
-    this.attach = attach
-    this.parameters = parameters
 
     this.addScreenshotToReport = function() {
         if (process.argv.includes('--format') || process.argv.includes('-f') || process.argv.includes('--format-options')) {

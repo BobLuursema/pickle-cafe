@@ -3,18 +3,18 @@ const glob = require('glob');
 const { Parser, AstBuilder } = require('gherkin');
 const { readFileSync, writeFileSync, createWriteStream, unlinkSync } = require('fs');
 
+/* Manage the TestCafé server */
 class Runner {
     constructor(){
         this.scenarioCount = 0
         this.testcafe = null
     }
     
+    /* Dynamically create the test.js file by parsing all the feature files inside the features folder */
     createTestCafeScript(){
-        // Count the amount of tests we're running
         const parser = new Parser(new AstBuilder())
         const features = glob.sync('./features/**/*.feature')
             .map(path => parser.parse(readFileSync(path, 'utf8').toString()))
-        // Create the test file
         let importStatement = 'import testControllerHolder from "./node_modules/pickle-cafe/testControllerHolder"\n\n'
         let testCode = ''
         for(let feature of features){
@@ -37,6 +37,7 @@ class Runner {
         writeFileSync('test.js', importStatement + testCode)
     }
     
+    /* Create the TestCafé runner */
     run(){
         this.stream = createWriteStream('reports/report.txt')
         createTestCafe()

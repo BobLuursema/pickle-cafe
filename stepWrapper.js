@@ -1,3 +1,7 @@
+/* Wrapper for the Given, When and Then Cucumber functions, this wrapper adds any error to the TestCafé testrun 
+ * since both Cucumber and TestCafé use a catch to find errors in the tests, but Cucumber catches them before TestCafé
+ * sees them. This wrapper makes the error also known to TestCafé so that you can also use the TestCafé reporting
+*/
 module.exports = function(fn){
     const arity = fn.length
     switch(arity){
