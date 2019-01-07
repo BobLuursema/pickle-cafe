@@ -23,7 +23,7 @@ const testControllerHolder = {
     /* This function clears the controller to make it ready for the next test */
     free: function() {
         testControllerHolder.t = null;
-
+        
         if (testControllerHolder.captureResolver) {
             testControllerHolder.captureResolver();
         }
