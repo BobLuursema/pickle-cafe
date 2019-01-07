@@ -26,8 +26,8 @@ module.exports = {
         }
 
         function checkLastResponse() {
-            if (t.testRun.lastDriverStatusResponse === 'test-done-confirmation') {
-                runner.testcafe.close()
+            if(typeof t === 'undefined' || t.testRun.lastDriverStatusResponse === 'test-done-confirmation') {
+                runner.close()
                 clearInterval(intervalId)
             }
         }

@@ -11,11 +11,6 @@ module.exports = function({attach, parameters}) {
 
     this.waitForTestController = testControllerHolder.get()
         .then(function(t) {
-            if(global.setupClasses){
-                for(let c of setupClasses){
-                    this[c.tcName()] = new c(t)
-                }
-            }
             this.t = t
             return t
         });

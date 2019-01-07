@@ -118,3 +118,4 @@ Now you are all set to use the BDD goodness with the TestCafé experience.
 ## Backlog
 
 - Expose the TestCafé programming interface for projects. This can probably be done by using the `parameters` variable in `world.js`.
+- When the first before hook in the first scenario, the first before hook in the second scenario did not crash. Even though the crash should have happened both times (close-mo-testen repository). I was messing around with an import, I think it has to do with that.
