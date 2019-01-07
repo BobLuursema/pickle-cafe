@@ -8,10 +8,12 @@ class Runner {
     constructor(){
         this.scenarioCount = 0
         this.testcafe = null
+        this.stream = null
     }
     
     /* Dynamically create the test.js file by parsing all the feature files inside the features folder */
     createTestCafeScript(){
+        this.stream = createWriteStream('reports/report.txt')
         const parser = new Parser(new AstBuilder())
         const features = glob.sync('./features/**/*.feature')
             .map(path => parser.parse(readFileSync(path, 'utf8').toString()))
@@ -39,7 +41,6 @@ class Runner {
     
     /* Create the TestCafé runner */
     run(){
-        this.stream = createWriteStream('reports/report.txt')
         createTestCafe()
         .then(testcafe => {
             this.testcafe = testcafe;
@@ -51,10 +52,13 @@ class Runner {
                 .reporter('spec', this.stream)
                 .run()
         })
-        .then(failedCount => {
-            this.stream.end()
-            unlinkSync('./test.js')
-        });
+    }
+
+    /* Close the stream, file and browser/server */
+    close(){
+        this.testcafe.close()
+        this.stream.end()
+        unlinkSync('./test.js')
     }
 }
 module.exports = new Runner()
