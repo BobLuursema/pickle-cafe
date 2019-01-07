@@ -11,7 +11,12 @@ module.exports = function(cucumber) {
             cucumber.Before(hooks.before)
             cucumber.After(hooks.after)
             cucumber.AfterAll(hooks.afterAll)
-            cucumber.setDefaultTimeout(30000)
+            if(process.env.TESTCAFE_DEBUG){
+                cucumber.setDefaultTimeout(-1) // Do not timeout while debugging
+            }
+            else {
+                cucumber.setDefaultTimeout(60000)
+            }
         },
         /* Exposes TestCafé to the hooks and step definitions */
         setupWorld: function(setupClasses){

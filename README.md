@@ -2,7 +2,12 @@
 
 Pickle Café is a framework for integrating TestCafé and Cucumber, I have forked this project from https://github.com/rquellh/testcafe-cucumber, extended it a bit and created it as a seperate module using dependency injection.
 
-# Usage
+## Options
+
+To configure a proxy for TestCafé set a `TESTCAFE_PROXY` environment variable to your liking.
+If you want to enable debug on fail for TestCafé set a `TESTCAFE_DEBUG` environment variable to any value.
+
+## Tutorial
 
 I've tried to not change the API for both Cucumber and TestCafé. To show how to use the integration I will lead you through creating a simple test for our internal GitLab login page.
 
@@ -117,5 +122,4 @@ Now you are all set to use the BDD goodness with the TestCafé experience.
 
 ## Backlog
 
-- Expose the TestCafé programming interface for projects. This can probably be done by using the `parameters` variable in `world.js`.
-- When the first before hook in the first scenario, the first before hook in the second scenario did not crash. Even though the crash should have happened both times (close-mo-testen repository). I was messing around with an import, I think it has to do with that.
+- When the first before hook in the first scenario crashed, the first before hook in the second scenario did not crash. Even though the crash should have happened both times (close-mo-testen repository). I was messing around with an import, I think it has to do with that.

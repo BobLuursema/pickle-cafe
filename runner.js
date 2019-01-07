@@ -45,12 +45,19 @@ class Runner {
         .then(testcafe => {
             this.testcafe = testcafe;
             const runner = testcafe.createRunner();
+            if(process.env.TESTCAFE_PROXY){
+                runner.useProxy(process.env.TESTCAFE_PROXY)
+            }
+            let runOptions = {}
+            if(process.env.TESTCAFE_DEBUG){
+                runOptions.debugOnFail = true
+            }
             return runner
                 .src('./test.js')
                 .screenshots('reports/screenshots/', true)
                 .browsers('path:../chrome.lnk')
                 .reporter('spec', this.stream)
-                .run()
+                .run(runOptions)
         })
     }
 
