@@ -49,7 +49,7 @@ class Runner {
                 runner.useProxy(process.env.TESTCAFE_PROXY)
             }
             let runOptions = {}
-            if(process.env.TESTCAFE_DEBUG){
+            if(process.env.TESTCAFE_DEBUG === '1'){
                 runOptions.debugOnFail = true
             }
             return runner

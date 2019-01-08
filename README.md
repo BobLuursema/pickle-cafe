@@ -119,16 +119,3 @@ Now we are ready to run the test via Cucumber: `.\node_modules\.bin\cucumber-js`
 ```
 
 Now you are all set to use the BDD goodness with the TestCafé experience.
-
-## Backlog
-
-- When the test function crashes because of an error raised by TestCafé everything works great, but if the test function crashes because of a generic JavaScript error (TypeError or something) TestCafé doesn't boot up the debugging interface but does pause the test.
-This means that the testing is stuck.
-
-Under the hood Cucumber already progresses to the next test, this also happens with a TestCafé error. It will then simply wait for TestCafé to start the new controller.
-
-This only happens when the test is running with `debugOnFail`. So we need to either make sure that TestCafé goes into the debug mode, or that it exits. Preferably of course the debug mode.
-
-In test-run/index.js in normal operation it will check the debugonfail and then call enqueuesetbreakpointcommand, that function will execute the command. But on the not testcafe error the call does seem to happen. But then no command inside of the function will execute.
-
-- When the first before hook in the first scenario crashed, the first before hook in the second scenario did not crash. Even though the crash should have happened both times (close-mo-testen repository). I was messing around with an import, I think it has to do with that.

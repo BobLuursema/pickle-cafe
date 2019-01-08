@@ -9,23 +9,23 @@ const testControllerHolder = {
      * this gives the holder the reference to the test controller.
     */
     capture: function(t) {
-        testControllerHolder.t = t;
+        testControllerHolder.t = t
 
         if (testControllerHolder.getResolver) {
-            testControllerHolder.getResolver(t);
+            testControllerHolder.getResolver(t)
         }
 
         return new Promise(function(resolve) {
-            testControllerHolder.captureResolver = resolve;
+            testControllerHolder.captureResolver = resolve
         });
     },
 
     /* This function clears the controller to make it ready for the next test */
     free: function() {
-        testControllerHolder.t = null;
+        testControllerHolder.t = null
         
         if (testControllerHolder.captureResolver) {
-            testControllerHolder.captureResolver();
+            testControllerHolder.captureResolver()
         }
     },
 
@@ -35,12 +35,12 @@ const testControllerHolder = {
     get: function() {
         return new Promise(function(resolve) {
             if (testControllerHolder.t) {
-                resolve(testControllerHolder.t);
+                resolve(testControllerHolder.t)
             } else {
-               testControllerHolder.getResolver = resolve;
+               testControllerHolder.getResolver = resolve
             }
         });
     },
 };
 
-module.exports = testControllerHolder;
+module.exports = testControllerHolder
