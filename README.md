@@ -11,7 +11,7 @@ If you want to enable debug on fail for TestCafé set a `TESTCAFE_DEBUG` environ
 
 I've tried to not change the API for both Cucumber and TestCafé. To show how to use the integration I will lead you through creating a simple test for our internal GitLab login page.
 
-Clone this project: `git clone git@vcs.aws.insim.biz:hyp-klant-worden/pickle-cafe.git`, and npm install: `cd pickle-cafe && npm install`.
+Clone this project and npm install: `git clone {url} && cd pickle-cafe && npm install`.
 Go back up and create a folder for the project: `cd .. && mkdir gitlab-test && cd gitlab-test`.
 Make your project an npm module `npm init`, answer the questions and then run `npm link ../pickle-cafe` to add Pickle Café to your project, and `npm install cucumber` to add Cucumber.
 
@@ -77,7 +77,7 @@ const { Given, When, Then } = require('pickle-cafe')(require('cucumber'))
 
 Given('a user with username {string} and password {string}', async function(name, pass){
     t.ctx.user = {name: name, pass: pass}
-    await t.navigateTo('https://vcs.aws.insim.biz/')
+    await t.navigateTo('https://gitlab.com/users/sign_in')
 })
 
 When('the user tries to login', async function(){
@@ -89,7 +89,7 @@ Then('the login fails', async function(){
 })
 ```
 
-Pickle Café exposes its own `Given`, `When`, `Then` and `defineStep` function to make the reporting work from both Cucumber and TestCafé. Make sure that you pass in an `async` function, that is necessary for TestCafé.
+Pickle Café exposes its own `Given`, `When`, `Then` and `defineStep` function to make the reporting work from both Cucumber and TestCafé. Make sure that you pass in an `async` function, that is necessary for TestCafé. PickleCafé sets the default timeout for these async functions at one minute, see the Cucumber docs to customize the timeout.
 
 The last step is to create a `reports` folder, currently PickleCafé does not expose the TestCafé programming interface and the setup requires that folder to exist. The final folder structure should look like this:
 
@@ -121,5 +121,14 @@ Now we are ready to run the test via Cucumber: `.\node_modules\.bin\cucumber-js`
 Now you are all set to use the BDD goodness with the TestCafé experience.
 
 ## Backlog
+
+- When the test function crashes because of an error raised by TestCafé everything works great, but if the test function crashes because of a generic JavaScript error (TypeError or something) TestCafé doesn't boot up the debugging interface but does pause the test.
+This means that the testing is stuck.
+
+Under the hood Cucumber already progresses to the next test, this also happens with a TestCafé error. It will then simply wait for TestCafé to start the new controller.
+
+This only happens when the test is running with `debugOnFail`. So we need to either make sure that TestCafé goes into the debug mode, or that it exits. Preferably of course the debug mode.
+
+In test-run/index.js in normal operation it will check the debugonfail and then call enqueuesetbreakpointcommand, that function will execute the command. But on the not testcafe error the call does seem to happen. But then no command inside of the function will execute.
 
 - When the first before hook in the first scenario crashed, the first before hook in the second scenario did not crash. Even though the crash should have happened both times (close-mo-testen repository). I was messing around with an import, I think it has to do with that.
