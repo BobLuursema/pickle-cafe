@@ -9,11 +9,17 @@ class Runner {
         this.scenarioCount = 0
         this.testcafe = null
         this.stream = null
+        this.options = {
+            browsers: process.env.TESTCAFE_BROWSERS ? process.env.TESTCAFE_BROWSERS : 'chrome',
+            debugOnFail: process.env.TESTCAFE_DEBUG === '1' ? true : false,
+            proxy: process.env.TESTCAFE_PROXY ? process.env.TESTCAFE_PROXY : null,
+            report_folder: process.env.TESTCAFE_REPORT ? process.env.TESTCAFE_REPORT : 'reports',
+        }
     }
     
     /* Dynamically create the test.js file by parsing all the feature files inside the features folder */
     createTestCafeScript(){
-        this.stream = createWriteStream('reports/report.txt')
+        this.stream = createWriteStream(`${this.options.report_folder}/report.txt`)
         const parser = new Parser(new AstBuilder())
         const features = glob.sync('./features/**/*.feature')
             .map(path => parser.parse(readFileSync(path, 'utf8').toString()))
@@ -45,17 +51,16 @@ class Runner {
         .then(testcafe => {
             this.testcafe = testcafe;
             const runner = testcafe.createRunner();
-            if(process.env.TESTCAFE_PROXY){
-                runner.useProxy(process.env.TESTCAFE_PROXY)
+            if(this.options.proxy){
+                runner.useProxy(this.options.proxy)
             }
-            let runOptions = {}
-            if(process.env.TESTCAFE_DEBUG === '1'){
-                runOptions.debugOnFail = true
+            let runOptions = {
+                debugOnFail: this.options.debugOnFail
             }
             return runner
                 .src('./test.js')
-                .screenshots('reports/screenshots/', true)
-                .browsers('path:../chrome.lnk')
+                .screenshots(`${this.options.report_folder}/screenshots/`, true)
+                .browsers(this.options.browsers)
                 .reporter('spec', this.stream)
                 .run(runOptions)
         })

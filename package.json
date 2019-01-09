@@ -18,5 +18,8 @@
     "gherkin": "5.0.0",
     "glob": "^7.1.3",
     "testcafe": "^0.23.3"
+  },
+  "peerDependencies": {
+    "cucumber": "^5.1.0"
   }
 }

@@ -1,0 +1,8 @@
+ Running tests in:
+ - Chrome 71.0.3578 / Windows 10.0.0
+
+ gitlab test
+ √ test
+
+
+ 1 passed (11s)
