@@ -1,19 +1,28 @@
-# Pickle Café
+# PickleCafé
 
-Pickle Café is a framework for integrating TestCafé and Cucumber, I have forked this project from https://github.com/rquellh/testcafe-cucumber, extended it a bit and created it as a seperate module using dependency injection.
+[![](https://img.shields.io/npm/v/pickle-cafe.svg)](https://github.com/BobLuursema/pickle-cafe)
+
+[![](https://img.shields.io/github/last-commit/BobLuursema/pickle-cafe.svg)](https://github.com/BobLuursema/pickle-cafe)
+
+PickleCafé is a framework for integrating TestCafé and Cucumber, I have forked this project from https://github.com/rquellh/testcafe-cucumber, extended it and created it as a seperate module using dependency injection.
 
 ## Options
 
-To configure a proxy for TestCafé set a `TESTCAFE_PROXY` environment variable to your liking.
-If you want to enable debug on fail for TestCafé set a `TESTCAFE_DEBUG` environment variable to any value.
+You can configure the TestCafé runner using environment variables. Each of these will be passed to the runner.
+
+| TestCafé      | Env variable      | Default |
+| ------------- | ----------------- | ------- |
+| browsers      | TESTCAFE_BROWSERS | chrome  |
+| debug on fail | TESTCAFE_DEBUG    | off     |
+| useProxy      | TESTCAFE_PROXY    | none    |
+| report folder | TESTCAFE_REPORT   | reports |
 
 ## Tutorial
 
 I've tried to not change the API for both Cucumber and TestCafé. To show how to use the integration I will lead you through creating a simple test for our internal GitLab login page.
 
-Clone this project and npm install: `git clone {url} && cd pickle-cafe && npm install`.
-Go back up and create a folder for the project: `cd .. && mkdir gitlab-test && cd gitlab-test`.
-Make your project an npm module `npm init`, answer the questions and then run `npm link ../pickle-cafe` to add Pickle Café to your project, and `npm install cucumber` to add Cucumber.
+Create a folder for the project: `mkdir gitlab-test && cd gitlab-test`.
+Make your project an npm module `npm init`, and install PickleCafé and Cucumber `npm install pickle-cafe cucumber`.
 
 First we need a [feature file](https://docs.cucumber.io/gherkin/reference/). Create a folder called `features` in your project, and add a `gitlab.feature` file with the following content:
 
@@ -37,17 +46,17 @@ pickleCafe.setupWorld()
 
 Inside this file you can still use the hooks from Cucumber as well. Your own Before hooks will run after the integration hooks and your After hooks will run before the integration hooks. This means that in your hooks you have access to the [test controller object](https://devexpress.github.io/testcafe/documentation/test-api/test-code-structure.html#test-controller) from TestCafé, which is exposed as a global `t` object (so the usage is the same as you would inside of a TestCafé test).
 
-TestCafé is expecting to be able to find `t` simply when you import it, but because of this integration TestCafé cannot do that. This means that you need to [explicitly pass `t` to any `Selector` you create](https://devexpress.github.io/testcafe/documentation/test-api/selecting-page-elements/selectors/selector-options.html#optionsboundtestrun). To make your life a bit easier you can extend your [Page Model](https://devexpress.github.io/testcafe/documentation/recipes/use-page-model.html) from the `BoundTestRunPage` object. The constructor of that object binds `t` to the object and has its own `Selector` method that you should use. Create a `pages` folder as a sibling of `features` and put a `page.js` file in it with the following content:
+TestCafé is expecting to be able to find `t` simply when you import it, but because of this integration TestCafé cannot do that. This means that you need to [explicitly pass `t` to any `Selector` you create](https://devexpress.github.io/testcafe/documentation/test-api/selecting-page-elements/selectors/selector-options.html#optionsboundtestrun). To make your life a bit easier you can extend your [Page Model](https://devexpress.github.io/testcafe/documentation/recipes/use-page-model.html) from the `BoundTestRunPage` object supplied by PickleCafé. The constructor of that object binds `t` to the object and has its own `Selector` method that you should use. Create a `pages` folder as a sibling of `features` and put a `page.js` file in it with the following content:
 
 ```javascript
 const { BoundTestRunPage } = require('pickle-cafe')(require('cucumber'))
 
 class Page extends BoundTestRunPage {
     setup(){
-        this.username = this.Selector('#username')
-        this.password = this.Selector('#password')
+        this.username = this.Selector('#user_login')
+        this.password = this.Selector('#user_password')
         this.button = this.Selector('input.btn-success')
-        this.login_error = this.Selector('span').withText('Invalid credentials')
+        this.login_error = this.Selector('span').withText('Invalid Login or password.')
     }
     async signin(user){
         await this.t
@@ -91,20 +100,20 @@ Then('the login fails', async function(){
 
 Pickle Café exposes its own `Given`, `When`, `Then` and `defineStep` function to make the reporting work from both Cucumber and TestCafé. Make sure that you pass in an `async` function, that is necessary for TestCafé. PickleCafé sets the default timeout for these async functions at one minute, see the Cucumber docs to customize the timeout.
 
-The last step is to create a `reports` folder, currently PickleCafé does not expose the TestCafé programming interface and the setup requires that folder to exist. The final folder structure should look like this:
+The last step is to create a `reports` folder, currently PickleCafé does not expose the TestCafé programming interface for reporting and the setup requires that folder to exist. The final folder structure should look like this:
 
 ```
-- gitlab-test
-  - features
-    - step_definitions
+- gitlab-test/
+  - features/
+    - step_definitions/
       - gitlab.js
-    - support
+    - support/
       - env.js
     - gitlab.feature
-  - node_modules
-  - pages
+  - node_modules/
+  - pages/
     - page.js
-  - reports
+  - reports/
   - package.json
 ```
 
