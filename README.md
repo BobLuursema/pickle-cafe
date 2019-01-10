@@ -6,7 +6,9 @@
 
 PickleCafé is a framework for integrating TestCafé and Cucumber, I have forked this project from https://github.com/rquellh/testcafe-cucumber, extended it and created it as a seperate module using dependency injection.
 
-## Options
+## Overview
+
+PickleCafé exposes TestCafé's test controller (t) as a global object to the step definitions using the hooks of Cucumber.js. If you need to import anything else from testcafe (like `ClientFunction`) you should import `testcafe` from PickleCafé and get access from there.
 
 You can configure the TestCafé runner using environment variables. Each of these will be passed to the runner.
 

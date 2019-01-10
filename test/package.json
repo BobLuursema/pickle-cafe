@@ -9,7 +9,6 @@
   "author": "Bob Luursema",
   "license": "MIT",
   "dependencies": {
-    "cucumber": "^5.1.0",
-    "pickle-cafe": "^0.3.0"
+    "cucumber": "^5.1.0"
   }
 }
