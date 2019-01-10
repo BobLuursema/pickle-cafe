@@ -2,6 +2,7 @@ const wrapper = require('./stepWrapper')
 const { BoundTestRunPage } = require('./page')
 const pickleCafeWorld = require('./world')
 const hooks = require('./hooks')
+const testcafe = require('testcafe')
 
 module.exports = function(cucumber) {
     return {
@@ -27,6 +28,7 @@ module.exports = function(cucumber) {
         Given: function(pattern, fn){cucumber.defineStep(pattern, wrapper(fn))},
         When: function(pattern, fn){cucumber.defineStep(pattern, wrapper(fn))},
         Then: function(pattern, fn){cucumber.defineStep(pattern, wrapper(fn))},
-        BoundTestRunPage
+        BoundTestRunPage,
+        testcafe
     }
 }
