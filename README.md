@@ -31,19 +31,26 @@ First we need a [feature file](https://docs.cucumber.io/gherkin/reference/). Cre
 ```gherkin
 Feature: gitlab test
 
+    @testcafe
     Scenario: test
         Given a user with username "test" and password "test"
         When the user tries to login
         Then the login fails
 ```
 
-TestCafé will be booted in hooks than run before and after the tests, you need to import those so add a `support` folder to the `features` folder. In it create an `env.js` file with the following content:
+TestCafé will be started and stopped in Cucumber's Before and After hooks if a scenario is tagged with `@testcafe`, you need to import those so add a `support` folder to the `features` folder. In it create an `env.js` file with the following content:
 
 ```javascript
 const pickleCafe = require('pickle-cafe')(require('cucumber'))
+const { setWorldConstructor } = require('cucumber')
+
+setWorldConstructor(function({attach, parameters}){
+    this.attach = attach
+    this.parameters = parameters
+    pickleCafe.pickleCafeWorld.call(this)
+})
 
 pickleCafe.setupHooks()
-pickleCafe.setupWorld()
 ```
 
 Inside this file you can still use the hooks from Cucumber as well. Your own Before hooks will run after the integration hooks and your After hooks will run before the integration hooks. This means that in your hooks you have access to the [test controller object](https://devexpress.github.io/testcafe/documentation/test-api/test-code-structure.html#test-controller) from TestCafé, which is exposed as a global `t` object (so the usage is the same as you would inside of a TestCafé test).
@@ -76,7 +83,7 @@ This page needs to be instantiated after `t` has been instantiated. You can writ
 const { Before } = require('cucumber')
 const { Page } = require('../../pages/page')
 
-Before(function(){
+Before({tags: '@testcafe'}, function(){
     this.page = new Page(t)
 })
 ```
@@ -84,18 +91,18 @@ Before(function(){
 Next we need to [define the steps](https://docs.cucumber.io/cucumber/step-definitions/). Add a `step_definitions` folder inside the `features` folder and add `gitlab.js` with the following content:
 
 ```javascript
-const { Given, When, Then } = require('pickle-cafe')(require('cucumber'))
+const { GivenTestcafe , WhenTestcafe, ThenTestcafe, testcafe } = require('pickle-cafe')(require('cucumber'))
 
-Given('a user with username {string} and password {string}', async function(name, pass){
+GivenTestcafe('a user with username {string} and password {string}', async function(name, pass){
     t.ctx.user = {name: name, pass: pass}
     await t.navigateTo('https://gitlab.com/users/sign_in')
 })
 
-When('the user tries to login', async function(){
+WhenTestcafe('the user tries to login', async function(){
     await this.page.signin(t.ctx.user)
 })
 
-Then('the login fails', async function(){
+ThenTestcafe('the login fails', async function(){
     await t.expect(this.page.login_error.exists).ok()
 })
 ```
@@ -136,8 +143,3 @@ Now you are all set to use the BDD goodness with the TestCafé experience.
 Clone the PickleCafé repository, then run `npm install` from the `pickle-cafe` directory and the `test` directory. Next from the `test` directory run `npm link ../pickle-cafe`.
 
 Finally run `run.cmd` (assuming you're on Windows).
-
-## Backlog
-
-- Check whether executing a single feature works. Cucumber should work, but my TestCafé implementation means that I might need to change the `createTestCafeScript` in `runner.js` to only compile the features that will be executed.
-- To better integrate with Cucumber tests that do not need TestCafé I may want to introduce some decorator to manage TestCafés lifecycle.

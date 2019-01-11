@@ -1,7 +1,6 @@
 const createTestCafe = require('testcafe');
-const glob = require('glob');
-const { Parser, AstBuilder } = require('gherkin');
-const { readFileSync, writeFileSync, createWriteStream, unlinkSync } = require('fs');
+const { writeFileSync, createWriteStream, unlinkSync } = require('fs');
+const generateUUID = function(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,generateUUID)}
 
 /* Manage the TestCafé server */
 class Runner {
@@ -9,6 +8,7 @@ class Runner {
         this.scenarioCount = 0
         this.testcafe = null
         this.stream = null
+        this.testFile = null
         this.options = {
             browsers: process.env.TESTCAFE_BROWSERS ? process.env.TESTCAFE_BROWSERS : 'chrome',
             debugOnFail: process.env.TESTCAFE_DEBUG === '1' ? true : false,
@@ -18,31 +18,14 @@ class Runner {
     }
     
     /* Dynamically create the test.js file by parsing all the feature files inside the features folder */
-    createTestCafeScript(){
+    createTestCafeScript(testname){
         this.stream = createWriteStream(`${this.options.report_folder}/report.txt`)
-        const parser = new Parser(new AstBuilder())
-        const features = glob.sync('./features/**/*.feature')
-            .map(path => parser.parse(readFileSync(path, 'utf8').toString()))
+        this.testFile = `test_${generateUUID()}.js`
         let importStatement = 'import testControllerHolder from "./node_modules/pickle-cafe/testControllerHolder"\n\n'
         let testCode = ''
-        for(let feature of features){
-            testCode += `fixture("${feature.feature.name}")\n`
-            for(let scenario of feature.feature.children){
-                switch(scenario.type){
-                    case 'Scenario':
-                        testCode += `test("${scenario.name}", testControllerHolder.capture)\n`
-                        break
-                    case 'ScenarioOutline':
-                        for(let example of scenario.examples){
-                            for(let i = 0; i < example.tableBody.length; i++){
-                                testCode += `test("${scenario.name}-${i}", testControllerHolder.capture)\n`
-                            }
-                        }
-                        break
-                }
-            }
-        }
-        writeFileSync('test.js', importStatement + testCode)
+        testCode += `fixture("${testname}")\n`
+        testCode += `test("${testname}", testControllerHolder.capture)\n`
+        writeFileSync(this.testFile, importStatement + testCode)
     }
     
     /* Create the TestCafé runner */
@@ -58,7 +41,7 @@ class Runner {
                 debugOnFail: this.options.debugOnFail
             }
             return runner
-                .src('./test.js')
+                .src(`./${this.testFile}`)
                 .screenshots(`${this.options.report_folder}/screenshots/`, true)
                 .browsers(this.options.browsers)
                 .reporter('spec', this.stream)
@@ -70,7 +53,7 @@ class Runner {
     close(){
         this.testcafe.close()
         this.stream.end()
-        unlinkSync('./test.js')
+        unlinkSync(`./${this.testFile}`)
     }
 }
-module.exports = new Runner()
+module.exports = Runner

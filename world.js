@@ -4,10 +4,9 @@ const base64Img = require('base64-img');
 /* This function is the World function for Cucumber, variables declared in the `this` here are exposed
  * to the hooks and step definitions in Cucumber.
 */
-module.exports = function({attach, parameters}) {
+module.exports = function(){
 
-    this.attach = attach
-    this.parameters = parameters
+    this.runner = null
 
     this.waitForTestController = testControllerHolder.get()
         .then(function(t) {

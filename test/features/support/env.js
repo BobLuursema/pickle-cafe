@@ -1,11 +1,14 @@
 const pickleCafe = require('pickle-cafe')(require('cucumber'))
-
-pickleCafe.setupHooks()
-pickleCafe.setupWorld()
-
-const { Before } = require('cucumber')
+const { setWorldConstructor, Before } = require('cucumber')
 const { Page } = require('../../pages/page')
 
-Before(function(){
+setWorldConstructor(function({attach, parameters}){
+    this.attach = attach
+    this.parameters = parameters
+    pickleCafe.pickleCafeWorld.call(this)
+})
+
+pickleCafe.setupHooks()
+Before({tags: '@testcafe'}, function(){
     this.page = new Page(t)
 })
