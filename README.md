@@ -1,7 +1,6 @@
 # PickleCafé
 
 [![](https://img.shields.io/npm/v/pickle-cafe.svg)](https://github.com/BobLuursema/pickle-cafe)
-
 [![](https://img.shields.io/github/last-commit/BobLuursema/pickle-cafe.svg)](https://github.com/BobLuursema/pickle-cafe)
 
 PickleCafé is a framework for integrating TestCafé and Cucumber, I have forked this project from https://github.com/rquellh/testcafe-cucumber, extended it and created it as a seperate module using dependency injection.
@@ -21,7 +20,7 @@ You can configure the TestCafé runner using environment variables. Each of thes
 
 ## Tutorial
 
-I've tried to not change the API for both Cucumber and TestCafé. To show how to use the integration I will lead you through creating a simple test for our internal GitLab login page.
+I've tried to not change the API for both Cucumber and TestCafé. To show how to use the integration I will lead you through creating a simple test for GitLab.
 
 Create a folder for the project: `mkdir gitlab-test && cd gitlab-test`.
 Make your project an npm module `npm init`, and install PickleCafé and Cucumber `npm install pickle-cafe cucumber`.
