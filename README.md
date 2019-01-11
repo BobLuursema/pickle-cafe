@@ -130,3 +130,14 @@ Now we are ready to run the test via Cucumber: `.\node_modules\.bin\cucumber-js`
 ```
 
 Now you are all set to use the BDD goodness with the TestCafé experience.
+
+## Test PickleCafé
+
+Clone the PickleCafé repository, then run `npm install` from the `pickle-cafe` directory and the `test` directory. Next from the `test` directory run `npm link ../pickle-cafe`.
+
+Finally run `run.cmd` (assuming you're on Windows).
+
+## Backlog
+
+- Check whether executing a single feature works. Cucumber should work, but my TestCafé implementation means that I might need to change the `createTestCafeScript` in `runner.js` to only compile the features that will be executed.
+- To better integrate with Cucumber tests that do not need TestCafé I may want to introduce some decorator to manage TestCafés lifecycle.
