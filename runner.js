@@ -38,7 +38,8 @@ class Runner {
                 runner.useProxy(this.options.proxy)
             }
             let runOptions = {
-                debugOnFail: this.options.debugOnFail
+                debugOnFail: this.options.debugOnFail,
+                skipJsErrors: true,
             }
             return runner
                 .src(`./${this.testFile}`)
