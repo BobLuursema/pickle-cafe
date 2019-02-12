@@ -1,6 +1,6 @@
 {
   "name": "pickle-cafe",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A framework that integrates TestCafé and Cucumber",
   "main": "index.js",
   "repository": {
@@ -11,6 +11,9 @@
     "testcafe",
     "cucumber"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "Bob Luursema",
   "license": "MIT",
   "dependencies": {
