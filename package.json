@@ -1,6 +1,6 @@
 {
   "name": "pickle-cafe",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A framework that integrates TestCafé and Cucumber",
   "main": "index.js",
   "repository": {
