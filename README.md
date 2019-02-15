@@ -139,6 +139,6 @@ Now you are all set to use the BDD goodness with the TestCafé experience.
 
 ## Test PickleCafé
 
-Clone the PickleCafé repository, then run `npm install` from the `pickle-cafe` directory and the `test` directory. Next from the `test` directory run `npm link ../pickle-cafe`.
+Clone the PickleCafé repository, then run `npm install` from the `pickle-cafe` directory and the `test` directory. Next from the `test` directory run `npm link ..\pickle-cafe`.
 
 Finally run `run.cmd` (assuming you're on Windows).

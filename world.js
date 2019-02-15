@@ -1,5 +1,6 @@
 const testControllerHolder = require('./testControllerHolder');
 const base64Img = require('base64-img');
+const debug = require('debug')('pickle-cafe:world')
 
 /* This function is the World function for Cucumber, variables declared in the `this` here are exposed
  * to the hooks and step definitions in Cucumber.
@@ -10,6 +11,7 @@ module.exports = function(){
 
     this.waitForTestController = testControllerHolder.get()
         .then(function(t) {
+            debug('t stored in world')
             this.t = t
             return t
         });

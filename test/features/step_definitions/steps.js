@@ -27,7 +27,7 @@ ThenTestcafe('the url is available', async function(){
     await t.expect(t.ctx.url).contains('https://gitlab.com/users/sign_in')
 })
 
-When('a scenario has no TestCafe', function(){})
+Given('a scenario has no TestCafe', function(){})
 
 Then('TestCafe is not booted', function(){
     expect(typeof this.t).to.equal('undefined')
