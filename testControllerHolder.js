@@ -1,3 +1,5 @@
+const debug = require('debug')('pickle-cafe:t-holder')
+
 /* This object manages the TestCafé test controllers */
 const testControllerHolder = {
 
@@ -9,6 +11,7 @@ const testControllerHolder = {
      * this gives the holder the reference to the test controller.
     */
     capture: function(t) {
+        debug('capture t')
         testControllerHolder.t = t
 
         if (testControllerHolder.getResolver) {
@@ -22,6 +25,7 @@ const testControllerHolder = {
 
     /* This function clears the controller to make it ready for the next test */
     free: function() {
+        debug('free t')
         testControllerHolder.t = null
         
         if (testControllerHolder.captureResolver) {
@@ -33,6 +37,7 @@ const testControllerHolder = {
      * the test controller of TestCafé is ready to use.
     */
     get: function() {
+        debug('retrieve t')
         return new Promise(function(resolve) {
             if (testControllerHolder.t) {
                 resolve(testControllerHolder.t)
