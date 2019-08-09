@@ -40,16 +40,16 @@ Feature: gitlab test
 TestCafé will be started and stopped in Cucumber's Before and After hooks if a scenario is tagged with `@testcafe`, you need to import those so add a `support` folder to the `features` folder. In it create an `env.js` file with the following content:
 
 ```javascript
-const pickleCafe = require('pickle-cafe')(require('cucumber'))
-const { setWorldConstructor } = require('cucumber')
+const pickleCafe = require("pickle-cafe")(require("cucumber"));
+const { setWorldConstructor } = require("cucumber");
 
-setWorldConstructor(function({attach, parameters}){
-    this.attach = attach
-    this.parameters = parameters
-    pickleCafe.pickleCafeWorld.call(this)
-})
+setWorldConstructor(function({ attach, parameters }) {
+  this.attach = attach;
+  this.parameters = parameters;
+  pickleCafe.pickleCafeWorld.call(this);
+});
 
-pickleCafe.setupHooks()
+pickleCafe.setupHooks();
 ```
 
 Inside this file you can still use the hooks from Cucumber as well. Your own Before hooks will run after the integration hooks and your After hooks will run before the integration hooks. This means that in your hooks you have access to the [test controller object](https://devexpress.github.io/testcafe/documentation/test-api/test-code-structure.html#test-controller) from TestCafé, which is exposed as a global `t` object (so the usage is the same as you would inside of a TestCafé test).
@@ -57,53 +57,63 @@ Inside this file you can still use the hooks from Cucumber as well. Your own Bef
 TestCafé is expecting to be able to find `t` simply when you import it, but because of this integration TestCafé cannot do that. This means that you need to [explicitly pass `t` to any `Selector` you create](https://devexpress.github.io/testcafe/documentation/test-api/selecting-page-elements/selectors/selector-options.html#optionsboundtestrun). To make your life a bit easier you can extend your [Page Model](https://devexpress.github.io/testcafe/documentation/recipes/use-page-model.html) from the `BoundTestRunPage` object supplied by PickleCafé. The constructor of that object binds `t` to the object and has its own `Selector` method that you should use. Create a `pages` folder as a sibling of `features` and put a `page.js` file in it with the following content:
 
 ```javascript
-const { BoundTestRunPage } = require('pickle-cafe')(require('cucumber'))
+const { BoundTestRunPage } = require("pickle-cafe")(require("cucumber"));
 
 class Page extends BoundTestRunPage {
-    setup(){
-        this.username = this.Selector('#user_login')
-        this.password = this.Selector('#user_password')
-        this.button = this.Selector('input.btn-success')
-        this.login_error = this.Selector('span').withText('Invalid Login or password.')
-    }
-    async signin(user){
-        await this.t
-            .typeText(this.username, user.name)
-            .typeText(this.password, user.pass)
-            .click(this.button)
-    }
+  setup() {
+    this.username = this.Selector("#user_login");
+    this.password = this.Selector("#user_password");
+    this.button = this.Selector("input.btn-success");
+    this.login_error = this.Selector("span").withText(
+      "Invalid Login or password."
+    );
+  }
+  async signin(user) {
+    await this.t
+      .typeText(this.username, user.name)
+      .typeText(this.password, user.pass)
+      .click(this.button);
+  }
 }
-module.exports.Page = Page
+module.exports.Page = Page;
 ```
 
 This page needs to be instantiated after `t` has been instantiated. You can write your own Before hook for that, so add the following code to `env.js`
 
 ```javascript
-const { Before } = require('cucumber')
-const { Page } = require('../../pages/page')
+const { Before } = require("cucumber");
+const { Page } = require("../../pages/page");
 
-Before({tags: '@testcafe'}, function(){
-    this.page = new Page(t)
-})
+Before({ tags: "@testcafe" }, function() {
+  this.page = new Page(t);
+});
 ```
 
 Next we need to [define the steps](https://docs.cucumber.io/cucumber/step-definitions/). Add a `step_definitions` folder inside the `features` folder and add `gitlab.js` with the following content:
 
 ```javascript
-const { GivenTestcafe , WhenTestcafe, ThenTestcafe, testcafe } = require('pickle-cafe')(require('cucumber'))
+const {
+  GivenTestcafe,
+  WhenTestcafe,
+  ThenTestcafe,
+  testcafe
+} = require("pickle-cafe")(require("cucumber"));
 
-GivenTestcafe('a user with username {string} and password {string}', async function(name, pass){
-    t.ctx.user = {name: name, pass: pass}
-    await t.navigateTo('https://gitlab.com/users/sign_in')
-})
+GivenTestcafe(
+  "a user with username {string} and password {string}",
+  async function(name, pass) {
+    t.ctx.user = { name: name, pass: pass };
+    await t.navigateTo("https://gitlab.com/users/sign_in");
+  }
+);
 
-WhenTestcafe('the user tries to login', async function(){
-    await this.page.signin(t.ctx.user)
-})
+WhenTestcafe("the user tries to login", async function() {
+  await this.page.signin(t.ctx.user);
+});
 
-ThenTestcafe('the login fails', async function(){
-    await t.expect(this.page.login_error.exists).ok()
-})
+ThenTestcafe("the login fails", async function() {
+  await t.expect(this.page.login_error.exists).ok();
+});
 ```
 
 Pickle Café exposes its own `Given`, `When`, `Then` and `defineStep` function to make the reporting work from both Cucumber and TestCafé. Make sure that you pass in an `async` function, that is necessary for TestCafé. PickleCafé sets the default timeout for these async functions at one minute, see the Cucumber docs to customize the timeout.
@@ -139,6 +149,6 @@ Now you are all set to use the BDD goodness with the TestCafé experience.
 
 ## Test PickleCafé
 
-Clone the PickleCafé repository, then run `npm install` from the `pickle-cafe` directory and the `test` directory. Next from the `test` directory run `npm link ..\pickle-cafe`.
+Clone the PickleCafé repository, then run `npm install` from the `pickle-cafe` directory and the `test` directory. Run `npm link` from the `pickle-cafe` directory, and then run `npm link pickle-cafe` from the `test` directory.
 
 Finally run `run.cmd` (assuming you're on Windows).
