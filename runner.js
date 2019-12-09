@@ -1,5 +1,5 @@
 const createTestCafe = require("testcafe");
-const { writeFileSync, createWriteStream, unlinkSync } = require("fs");
+const { writeFileSync, unlinkSync } = require("fs");
 const debug = require("debug")("pickle-cafe:runner");
 const generateUUID = function(a) {
   return a
@@ -52,7 +52,10 @@ class Runner {
       };
       return runner
         .src(`./${this.testFile}`)
-        .screenshots(`${this.options.report_folder}/screenshots/`, true)
+        .screenshots({
+          path: `${this.options.report_folder}/screenshots/`,
+          takeOnFails: true
+        })
         .browsers(this.options.browsers)
         .reporter("spec", `${this.options.report_folder}/report.txt`)
         .run(runOptions);

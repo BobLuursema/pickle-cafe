@@ -19,9 +19,9 @@
   "dependencies": {
     "base64-img": "^1.0.4",
     "debug": "^4.1.1",
-    "testcafe": "^1.4.0"
+    "testcafe": "^1.7.0"
   },
   "peerDependencies": {
-    "cucumber": "^5.1.0"
+    "cucumber": "^6.0.5"
   }
 }

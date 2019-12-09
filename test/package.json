@@ -10,6 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "chai": "^4.2.0",
-    "cucumber": "^5.1.0"
+    "cucumber": "^6.0.5"
   }
 }
