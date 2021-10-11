@@ -6,10 +6,12 @@ module.exports = {
   /* Wait for TestCafé to boot up and return the TestCafé controller */
   before(data) {
     debug("before hook - start runner");
+    global.testControllerHolder = testControllerHolder;
     this.runner = new Runner();
     this.runner.createTestCafeScript(data.pickle.name);
     this.runner.run();
-    return this.waitForTestController.then(function(t) {
+    debug("return promise that waits for t to be stored in world")
+    return this.waitForTestController.then(function (t) {
       debug("runner started");
       return t;
     });
@@ -21,10 +23,12 @@ module.exports = {
       // Does resolving t here cause an issue if we want to debug?
       testControllerHolder.free();
       let intervalId = null;
+      let timeoutId = null;
       let runner = this.runner;
 
       function waitForTestCafe() {
         intervalId = setInterval(checkLastResponse, 500);
+        timeoutId = setTimeout(close, 5000)
       }
 
       function checkLastResponse() {
@@ -32,11 +36,16 @@ module.exports = {
           typeof t === "undefined" ||
           t.testRun.lastDriverStatusResponse === "test-done-confirmation"
         ) {
-          debug("close runner");
-          runner.close();
-          clearInterval(intervalId);
-          resolve();
+          close()
         }
+      }
+
+      function close() {
+        debug("close runner");
+        clearTimeout(timeoutId)
+        clearInterval(intervalId);
+        runner.close();
+        resolve();
       }
 
       waitForTestCafe();

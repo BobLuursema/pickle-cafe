@@ -2,17 +2,13 @@ const { BoundTestRunPage } = require("pickle-cafe")(require("cucumber"));
 
 class Page extends BoundTestRunPage {
   setup() {
-    this.username = this.Selector("#user_login");
-    this.password = this.Selector("#user_password");
-    this.button = this.Selector("input.btn-success");
-    this.login_error = this.Selector("span").withText(
-      "Invalid Login or password."
-    );
+    this.yourName = this.Selector("#developer-name");
+    this.button = this.Selector("#submit-button");
+    this.thankYou = this.Selector("h1").withText("Thank you");
   }
-  async signin(user) {
+  async submitform(name) {
     await this.t
-      .typeText(this.username, user.name)
-      .typeText(this.password, user.pass)
+      .typeText(this.yourName, name)
       .click(this.button);
   }
 }

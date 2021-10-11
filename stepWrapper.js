@@ -4,11 +4,11 @@ const processTestFnError = require("testcafe/lib/errors/process-test-fn-error");
  * since both Cucumber and TestCafé use a catch to find errors in the tests, but Cucumber catches them before TestCafé
  * sees them. This wrapper makes the error also known to TestCafé so that you can also use the TestCafé reporting
  */
-module.exports = function(fn) {
+module.exports = function (fn) {
   const arity = fn.length;
   switch (arity) {
     case 0:
-      return async function() {
+      return async function () {
         try {
           return await fn.apply(this, arguments);
         } catch (ex) {
@@ -17,7 +17,7 @@ module.exports = function(fn) {
         }
       };
     case 1:
-      return async function(a) {
+      return async function (a) {
         try {
           return await fn.apply(this, arguments);
         } catch (ex) {
@@ -26,7 +26,7 @@ module.exports = function(fn) {
         }
       };
     case 2:
-      return async function(a, b) {
+      return async function (a, b) {
         try {
           return await fn.apply(this, arguments);
         } catch (ex) {
@@ -35,7 +35,7 @@ module.exports = function(fn) {
         }
       };
     case 3:
-      return async function(a, b, c) {
+      return async function (a, b, c) {
         try {
           return await fn.apply(this, arguments);
         } catch (ex) {
@@ -44,7 +44,7 @@ module.exports = function(fn) {
         }
       };
     case 4:
-      return async function(a, b, c, d) {
+      return async function (a, b, c, d) {
         try {
           return await fn.apply(this, arguments);
         } catch (ex) {
@@ -53,7 +53,7 @@ module.exports = function(fn) {
         }
       };
     case 5:
-      return async function(a, b, c, d, e) {
+      return async function (a, b, c, d, e) {
         try {
           return await fn.apply(this, arguments);
         } catch (ex) {
@@ -62,7 +62,7 @@ module.exports = function(fn) {
         }
       };
     case 6:
-      return async function(a, b, c, d, e, f) {
+      return async function (a, b, c, d, e, f) {
         try {
           return await fn.apply(this, arguments);
         } catch (ex) {
