@@ -18,10 +18,13 @@
   "license": "MIT",
   "dependencies": {
     "base64-img": "^1.0.4",
-    "debug": "^4.1.1",
-    "testcafe": "^1.7.0"
+    "debug": "^4.3.2"
   },
   "peerDependencies": {
-    "cucumber": "^6.0.5"
+    "cucumber": "^6.0.5",
+    "testcafe": "^1.16.1"
+  },
+  "devDependencies": {
+    "testcafe": "^1.16.1"
   }
 }

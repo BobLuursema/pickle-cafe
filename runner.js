@@ -1,7 +1,7 @@
 const createTestCafe = require("testcafe");
 const { writeFileSync, unlinkSync } = require("fs");
 const debug = require("debug")("pickle-cafe:runner");
-const generateUUID = function(a) {
+const generateUUID = function (a) {
   return a
     ? (a ^ ((Math.random() * 16) >> (a / 4))).toString(16)
     : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, generateUUID);
@@ -29,12 +29,9 @@ class Runner {
   createTestCafeScript(testname) {
     debug("create testscript");
     this.testFile = `test_${generateUUID()}.js`;
-    let importStatement =
-      'import testControllerHolder from "./node_modules/pickle-cafe/testControllerHolder"\n\n';
-    let testCode = "";
-    testCode += `fixture("${testname}")\n`;
+    let testCode = `fixture("${testname}")\n`;
     testCode += `test("${testname}", testControllerHolder.capture)\n`;
-    writeFileSync(this.testFile, importStatement + testCode);
+    writeFileSync(this.testFile, testCode);
   }
 
   /* Create the TestCafé runner */

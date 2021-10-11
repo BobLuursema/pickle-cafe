@@ -151,4 +151,4 @@ Now you are all set to use the BDD goodness with the TestCafé experience.
 
 Clone the PickleCafé repository, then run `npm install` from the `pickle-cafe` directory and the `test` directory. Run `npm link` from the `pickle-cafe` directory, and then run `npm link pickle-cafe` from the `test` directory.
 
-Finally run `run.cmd` (assuming you're on Windows).
+Finally run `run.cmd` (assuming you're on Windows). This will run four features, of which one should fail and the error should be visisble in the console (via Cucumber) and in `report.txt` for TestCafé. The report is overwritten by each scenario, so only the last TestCafé scenario will be in it.
